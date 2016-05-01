@@ -1,16 +1,18 @@
 package com.tarcle.moment.activity;
 
 import com.tarcle.moment.R;
-import com.tarcle.moment.TarcleRobolectricTestRunner;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(TarcleRobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest = "src/main/AndroidManifest.xml", sdk = 21)
 public class RootActivityTest {
 
     private RootActivity activity;

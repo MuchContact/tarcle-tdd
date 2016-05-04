@@ -2,7 +2,6 @@ package com.tarcle.moment;
 
 import android.util.Log;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -10,7 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 
@@ -19,7 +20,7 @@ public class RxJavaTest {
     List<Student> students = Arrays.asList(new Student("Li"), new Student("Zhang"));
     private String tag = "RXJAVA";
 
-    Subscriber<String> subscriber = new Subscriber<String>() {
+    Subscriber<Course> subscriber = new Subscriber<Course>() {
         @Override
         public void onCompleted() {
 
@@ -31,22 +32,27 @@ public class RxJavaTest {
         }
 
         @Override
-        public void onNext(String name) {
-            System.out.println(name);
-            Log.d(tag, name);
+        public void onNext(Course course) {
+            System.out.println(course.name);
         }
     };
 
     @Test
     public void testRxJava() throws Exception {
+        Action1<Course> action = new Action1<Course>() {
+            @Override
+            public void call(Course course) {
+                System.out.println(course.name);
+            }
+        };
         Observable.from(students)
-                .map(new Func1<Student, String>() {
+                .flatMap(new Func1<Student, Observable<Course>>() {
                     @Override
-                    public String call(Student student) {
-                        return student.getName();
+                    public Observable<Course> call(Student student) {
+                        return Observable.from(student.getCourses());
                     }
                 })
-                .subscribe(subscriber);
+                .subscribe(action);
 
     }
 
